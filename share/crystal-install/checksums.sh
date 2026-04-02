@@ -20,7 +20,8 @@ function compute_sha256()
 	fi
 
 	debug "$sha256sum $file"
-	local output="$($sha256sum "$file")"
+	local output
+	output="$($sha256sum "$file")"
 
 	echo -n "${output%% *}"
 }
@@ -38,7 +39,8 @@ function verify_sha256()
 		return
 	fi
 
-	local actual="$(compute_sha256 "$file")"
+	local actual
+	actual="$(compute_sha256 "$file")"
 
 	if [[ "$actual" != "$expected" ]]; then
 		error "Invalid SHA256 checksum for ${file##*/}"
@@ -80,7 +82,8 @@ function lookup_cached_sha256()
 		return 1
 	fi
 
-	local output="$(grep "  $archive$" "$cache_file")"
+	local output
+	output="$(grep "  $archive$" "$cache_file")"
 
 	if [[ -n "$output" ]]; then
 		echo -n "${output%% *}"

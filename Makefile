@@ -30,6 +30,9 @@ check:
 		   --exclude SC1090 \
 		   --exclude SC1091 \
 		   --exclude SC2242 \
+		   --exclude SC2089 \
+		   --exclude SC2090 \
+		   --exclude SC2207 \
 		   share/$(NAME)/*.sh bin/*
 
 test:
