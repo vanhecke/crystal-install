@@ -1,0 +1,6 @@
+pkg/
+test/fixtures/home/
+test/fixtures/download_test/
+test/fixtures/checksums_test/
+test/fixtures/versions_test/
+test/fixtures/no_reinstall_test/

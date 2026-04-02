@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+source "${0%/*}/../share/crystal-install/crystal-install.sh"
+
+if (( $# == 0 )); then
+	list_versions
+	exit $?
+else
+	parse_options "$@" || exit $?
+fi
+
+if [[ $force_update -eq 1 ]] || are_versions_missing || is_versions_stale; then
+	log "Updating crystal versions ..."
+	fetch_crystal_versions || fail "Failed to download crystal versions!"
+fi
+
+init || exit $?
+
+if [[ $no_reinstall -eq 1 ]] && [[ -x "$install_dir/bin/crystal" ]]; then
+	log "Crystal $crystal_version is already installed into $install_dir"
+	exit
+fi
+
+if ! check_write_permissions "$install_dir"; then
+	fail "Cannot write to the installation directory: $install_dir"
+fi
+
+log "Installing crystal $crystal_version into $install_dir ..."
+
+pre_install || fail "Pre-install tasks failed!"
+
+if [[ ! $no_install_deps -eq 1 ]]; then
+	install_deps || fail "Installing dependencies failed!"
+fi
+
+if [[ ! $no_download -eq 1 ]]; then
+	download_crystal || fail "Download of $crystal_url failed!"
+fi
+
+if [[ ! $no_verify -eq 1 ]]; then
+	verify_crystal || fail "Verification of $crystal_archive failed!"
+fi
+
+if [[ ! $no_extract -eq 1 ]]; then
+	extract_crystal || fail "Unpacking of $crystal_archive failed!"
+fi
+
+install_crystal || fail "Installation of crystal $crystal_version failed!"
+
+post_install || fail "Post-install tasks failed!"
+
+if [[ $cleanup -eq 1 ]]; then
+	cleanup_source || fail "Cleanup failed!"
+fi
+
+log "Successfully installed crystal $crystal_version into $install_dir"
