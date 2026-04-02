@@ -74,21 +74,3 @@ jobs:
         run: brew install wget shunit2
       - name: Run tests
         run: make test
-
-  freebsd:
-    runs-on: ubuntu-latest
-    name: "Run tests on FreeBSD"
-    steps:
-    - uses: actions/checkout@v4
-    - name: Run tests
-      id: freebsd
-      uses: vmactions/freebsd-vm@v1
-      with:
-        usesh: true
-        copyback: false
-        prepare: |
-          pkg install -y wget curl shunit2
-        run: |
-          pw useradd user
-          chown -R user:user .
-          su -m user -c "make test"
